@@ -1,5 +1,5 @@
 import pandas as pd
-from scipy.stats import ttest_ind
+from scipy.stats import ttest_ind, t
 
 
 # Load cleaned dataset
@@ -30,6 +30,37 @@ test_result = ttest_ind(
     equal_var=False
 )
 
+# Calculate 95% confidence interval
+mean_difference = male_sales.mean() - female_sales.mean()
+
+male_variance = male_sales.var(ddof=1)
+female_variance = female_sales.var(ddof=1)
+
+male_n = len(male_sales)
+female_n = len(female_sales)
+
+standard_error = (
+    (male_variance / male_n) +
+    (female_variance / female_n)
+) ** 0.5
+
+degrees_of_freedom = (
+    (male_variance / male_n + female_variance / female_n) ** 2
+    /
+    (
+        ((male_variance / male_n) ** 2 / (male_n - 1))
+        +
+        ((female_variance / female_n) ** 2 / (female_n - 1))
+    )
+)
+
+critical_value = t.ppf(0.975, degrees_of_freedom)
+
+margin_of_error = critical_value * standard_error
+
+confidence_lower = mean_difference - margin_of_error
+confidence_upper = mean_difference + margin_of_error
+
 t_stat = test_result.statistic
 p_value = test_result.pvalue
 
@@ -42,6 +73,11 @@ print("H1: There is a significant difference in average sales between male and f
 
 print(f"\nT-statistic: {t_stat:.3f}")
 print(f"P-value: {p_value:.3f}")
+print(f"Mean Difference: ₹{mean_difference:,.2f}")
+print(
+    f"95% Confidence Interval: "
+    f"₹{confidence_lower:,.2f} to ₹{confidence_upper:,.2f}"
+)
 
 alpha = 0.05
 
