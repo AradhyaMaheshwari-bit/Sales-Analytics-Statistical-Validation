@@ -1,0 +1,32 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.env.*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Python distribution/build files
+build/
+dist/
+*.egg-info/
+
+# Test / coverage files
+.coverage
+htmlcov/
+.pytest_cache/
